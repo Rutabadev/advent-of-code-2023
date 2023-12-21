@@ -25,8 +25,8 @@ const result = input
 			}
 			return digit;
 		});
-		const num = parseInt(firstDigit + lastDigit, 10);
-		return acc + num;
+		const number = +(firstDigit + lastDigit);
+		return acc + number;
 	}, 0);
 
 console.log(result);

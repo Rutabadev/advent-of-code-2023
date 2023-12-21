@@ -20,7 +20,7 @@ const result = Object.values(games).reduce((acc, game) => {
   };
   for (let reveal of reveals) {
     for (let color of ['red', 'green', 'blue']) {
-      const revealed = parseInt(reveal.match(new RegExp(`(\\d+) ${color}`))?.[1] ?? 0);
+      const revealed = +reveal.match(new RegExp(`(\\d+) ${color}`))?.[1] ?? 0;
       if (maxes[color] < revealed) {
         maxes[color] = revealed;
       }

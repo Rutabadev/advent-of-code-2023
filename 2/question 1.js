@@ -25,13 +25,13 @@ outerLoop: for (let i of Object.keys(games)) {
   // count cubes in each reveals
   for (let reveal of reveals) {
     for (let color of ['red', 'green', 'blue']) {
-      const revealed = parseInt(reveal.match(new RegExp(`(\\d+) ${color}`))?.[1] ?? 0);
+      const revealed = +reveal.match(new RegExp(`(\\d+) ${color}`))?.[1] ?? 0;
       if (revealed > cubes[color]) {
         continue outerLoop;
       }
     };
   }
-  result += parseInt(i);
+  result += +i;
 }
 
 console.log(result);
