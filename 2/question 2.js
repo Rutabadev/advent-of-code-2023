@@ -13,7 +13,7 @@ const games = input
 
 const result = Object.values(games).reduce((acc, game) => {
   const reveals = game.split(";").map((x) => x.trim());
-  let maxes = {
+  const maxes = {
     red: 0,
     green: 0,
     blue: 0,
