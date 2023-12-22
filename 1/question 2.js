@@ -14,15 +14,17 @@ const digits = {
 
 const result = input
 	.split('\n')
-	.reduce((acc, curr) => {
+	.reduce((acc, line) => {
 		const stringDigits = Object.keys(digits);
-		let firstDigit = curr.match(new RegExp(`^.*?(\\d|${stringDigits.join("|")})`))?.[1] ?? 'fail';
-		let lastDigit = curr.match(new RegExp(`^.*(\\d|${stringDigits.join("|")})`))?.[1] ?? 'fail';
+		let firstDigit = line.match(new RegExp(`^.*?(\\d|${stringDigits.join("|")})`))?.[1];
+		let lastDigit = line.match(new RegExp(`^.*(\\d|${stringDigits.join("|")})`))?.[1];
+		if (!firstDigit || !lastDigit) throw new Error(`No first or last digit found in ${line}`);
 		[firstDigit, lastDigit] = [firstDigit, lastDigit].map(digit => {
 			if (digit.length > 1) {
-				// then it's a string
-				return digits[digit];
+				// digit is a word
+				return digits[/** @type {keyof typeof digits} */ (digit)];
 			}
+			// digit is a number
 			return digit;
 		});
 		const number = +(firstDigit + lastDigit);
