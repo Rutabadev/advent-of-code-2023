@@ -1,15 +1,13 @@
-import input from './input.js';
+import input from "./input.js";
 
-const games = input
-  .split('\n')
-  .reduce((acc, game) => {
-    const id = game.match(/^Game (\d+)/)?.[1] ?? 'miss';
-    const data = game.match(/^Game \d+: (.+)/)?.[1];
-    return {
-      ...acc,
-      [id]: data,
-    };
-  }, {});
+const games = input.split("\n").reduce((acc, game) => {
+  const id = game.match(/^Game (\d+)/)?.[1] ?? "miss";
+  const data = game.match(/^Game \d+: (.+)/)?.[1];
+  return {
+    ...acc,
+    [id]: data,
+  };
+}, {});
 
 const result = Object.values(games).reduce((acc, game) => {
   const reveals = game.split(";").map((x) => x.trim());
@@ -19,7 +17,7 @@ const result = Object.values(games).reduce((acc, game) => {
     blue: 0,
   };
   for (let reveal of reveals) {
-    for (let color of ['red', 'green', 'blue']) {
+    for (let color of ["red", "green", "blue"]) {
       const revealed = +reveal.match(new RegExp(`(\\d+) ${color}`))?.[1] ?? 0;
       if (maxes[color] < revealed) {
         maxes[color] = revealed;
