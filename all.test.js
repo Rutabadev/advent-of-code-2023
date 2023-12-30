@@ -5,6 +5,8 @@ import { computeAnswer as day2Question1 } from "./2/question 1.js";
 import { computeAnswer as day2Question2 } from "./2/question 2.js";
 import { computeAnswer as day3Question1 } from "./3/question 1.js";
 import { computeAnswer as day3Question2 } from "./3/question 2.js";
+import { computeAnswer as day4Question1 } from "./4/question 1.js";
+import { computeAnswer as day4Question2 } from "./4/question 2.js";
 
 describe("day 1", () => {
   test("question 1", () => {
@@ -30,5 +32,14 @@ describe("day 3", () => {
   });
   test("question 2", () => {
     expect(day3Question2()).toEqual(85010461);
+  });
+});
+
+describe("day 4", () => {
+  test("question 1", () => {
+    expect(day4Question1()).toEqual(28750);
+  });
+  test("question 2", () => {
+    expect(day4Question2()).toEqual(10_212_704);
   });
 });
