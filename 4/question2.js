@@ -1,10 +1,5 @@
 import input from "./input.js";
-
-const extractCardNumber = (line) => {
-  const cardNumber = +(line.match(/Card +(\d+)/)?.[1] ?? "");
-  if (!cardNumber) throw "current card number not found";
-  return cardNumber;
-};
+import { extractCardNumber, getWinsForCard } from "./question1.js";
 
 const cache = {};
 
@@ -17,23 +12,8 @@ export function computeAnswer() {
       lines.push(...cache[currentCardNumber]);
       continue;
     }
-    const winningNumbers =
-      line
-        .match(/Card +\d+: (.+) \|/)?.[1]
-        .split(" ")
-        .filter(Boolean) || [];
-    const numbers =
-      line
-        .match(/\| (.+)/)?.[1]
-        .split(" ")
-        .filter(Boolean) || [];
 
-    let result = 0;
-    for (let winningNumber of winningNumbers) {
-      if (numbers.includes(winningNumber)) {
-        result++;
-      }
-    }
+    let result = getWinsForCard(line);
 
     const addedCards = [];
     while (result > 0) {
