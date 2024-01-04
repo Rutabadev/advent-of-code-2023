@@ -28,7 +28,7 @@ export const getWinsForCard = (line) => {
 };
 
 export function computeAnswer() {
-  return input.split("\n").reduce((acc, line) => {
+  const result = input.split("\n").reduce((acc, line) => {
     let wins = getWinsForCard(line);
     let score = 0;
     while (wins) {
@@ -37,6 +37,6 @@ export function computeAnswer() {
     }
     return acc + score;
   }, 0);
+  console.log(result);
+  return result;
 }
-
-console.log(computeAnswer());

@@ -32,7 +32,7 @@ export function computeAnswer() {
     cache[currentCardNumber] = addedCards;
   }
 
-  return lines.length;
+  const result = lines.length;
+  console.log(result);
+  return result;
 }
-
-console.log(computeAnswer());

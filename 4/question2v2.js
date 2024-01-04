@@ -19,7 +19,10 @@ export function computeAnswer() {
       result--;
     }
   }
-  return Object.values(cards).reduce((acc, card) => (acc += card.number), 0);
+  const result = Object.values(cards).reduce(
+    (acc, card) => (acc += card.number),
+    0,
+  );
+  console.log(result);
+  return result;
 }
-
-console.log(computeAnswer());

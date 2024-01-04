@@ -82,7 +82,6 @@ export function computeAnswer() {
       }
     }
   });
+  console.log(result);
   return result;
 }
-
-console.log(computeAnswer());

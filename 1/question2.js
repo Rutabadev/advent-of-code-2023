@@ -13,7 +13,7 @@ export function computeAnswer() {
     nine: "9",
   };
 
-  return input.split("\n").reduce((acc, line) => {
+  const result = input.split("\n").reduce((acc, line) => {
     const stringDigits = Object.keys(digits);
     let firstDigit = line.match(
       new RegExp(`^.*?(\\d|${stringDigits.join("|")})`),
@@ -34,6 +34,6 @@ export function computeAnswer() {
     const number = +(firstDigit + lastDigit);
     return acc + number;
   }, 0);
+  console.log(result);
+  return result;
 }
-
-console.log(computeAnswer());

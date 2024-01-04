@@ -2,6 +2,7 @@ import input from "./input.js";
 import { extractMap } from "./question1.js";
 
 export function computeAnswer() {
+  console.time("working");
   let lowestLocation = Infinity;
   const seeds = input
     .match(/^seeds: (.+)$/m)?.[1]
@@ -70,9 +71,7 @@ export function computeAnswer() {
     }
   }
 
+  console.log(lowestLocation);
+  console.timeEnd("working");
   return lowestLocation;
 }
-
-console.time("working");
-console.log(computeAnswer());
-console.timeEnd("working");

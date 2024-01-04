@@ -32,7 +32,6 @@ export function computeAnswer() {
     }
     result += +i;
   }
+  console.log(result);
   return result;
 }
-
-console.log(computeAnswer());

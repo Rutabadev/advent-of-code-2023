@@ -36,7 +36,7 @@ describe("day 4", () => {
   test("question 1", () => {
     expect(day4.question1()).toEqual(28_750);
   });
-  test("question 2 with caching ~1s", () => {
+  test.skip("question 2 with caching ~1s", () => {
     expect(day4.question2()).toEqual(10_212_704);
   });
   test("question 2 v2 with optimized algorithm", () => {

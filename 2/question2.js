@@ -10,7 +10,7 @@ export function computeAnswer() {
     };
   }, {});
 
-  return Object.values(games).reduce((acc, game) => {
+  const result = Object.values(games).reduce((acc, game) => {
     const reveals = game.split(";").map((x) => x.trim());
     const maxes = {
       red: 0,
@@ -28,6 +28,6 @@ export function computeAnswer() {
     const power = Object.values(maxes).reduce((acc, x) => acc * x);
     return acc + power;
   }, 0);
+  console.log(result);
+  return result;
 }
-
-console.log(computeAnswer());

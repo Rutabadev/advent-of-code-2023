@@ -49,7 +49,7 @@ export function computeAnswer() {
     });
     return nextSourceList;
   }, seeds);
-  return locations.sort((a, b) => a - b)[0];
+  const result = locations.sort((a, b) => a - b)[0];
+  console.log(result);
+  return result;
 }
-
-console.log(computeAnswer());
