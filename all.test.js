@@ -48,7 +48,10 @@ describe("day 5", () => {
   test("question 1", () => {
     expect(day5.question1()).toEqual(196_167_384);
   });
-  test.skip("question 2 2m47 execution time", () => {
+  test.skip("question 2 2m47s", () => {
     expect(day5.question2()).toEqual(125_742_456);
+  });
+  test.skip("question 2 v2 12.6s", () => {
+    expect(day5.question2v2()).toEqual(125_742_456);
   });
 });
