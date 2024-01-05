@@ -36,10 +36,10 @@ describe("day 4", () => {
   test("question 1", () => {
     expect(day4.question1()).toEqual(28_750);
   });
-  test.skip("question 2 with caching ~1s", () => {
+  test.skip("question 2 (caching) ~1s", () => {
     expect(day4.question2()).toEqual(10_212_704);
   });
-  test("question 2 v2 with optimized algorithm", () => {
+  test("question 2 v2 (optimized algorithm)", () => {
     expect(day4.question2v2()).toEqual(10_212_704);
   });
 });
@@ -51,7 +51,7 @@ describe("day 5", () => {
   test.skip("question 2 2m47s", () => {
     expect(day5.question2()).toEqual(125_742_456);
   });
-  test("question 2 v2 ~3s", async () => {
+  test("question 2 v2 (optimized algorithm + worker threads) ~3s", async () => {
     expect(await day5.question2v2()).toEqual(125_742_456);
   });
 });
