@@ -34,31 +34,41 @@ export function computeAnswer() {
       maps.push(map);
     }
 
-    const concurrentWorkers = cpus().length;
+    const concurrentWorkers = Math.min(cpus().length, 8);
     const results = [];
+    const runningWorkers = [];
     let runningWorkersCount = concurrentWorkers;
+    let workersStopped = false;
     for (let i = 0; i < concurrentWorkers; i++) {
       const worker = new Worker("./5/question2v2_worker.js");
+      runningWorkers.push(worker);
       worker.postMessage({
-        i,
-        concurrentWorkers,
-        maps,
-        seeds,
+        action: "start",
+        data: {
+          i,
+          concurrentWorkers,
+          maps,
+          seeds,
+        },
       });
-      worker.on("message", ({ action, data }) => {
-        if (action === "done") {
-          console.log("worker", i, "found", data);
-          results.push(data);
-          worker.terminate();
-          runningWorkersCount--;
-          if (!runningWorkersCount) {
-            const end = performance.now();
-            console.log("took", ((end - start) / 1000).toPrecision(3), "s");
-            resolve(results.sort((a, b) => a - b)[0]);
-          }
+      worker.on("message", (data) => {
+        console.log("worker", i, "found", data);
+        results.push(data);
+        worker.terminate();
+        runningWorkersCount--;
+        if (!workersStopped) {
+          const otherWorkers = runningWorkers.filter(
+            (_worker, workerId) => workerId !== i,
+          );
+          otherWorkers.forEach((worker) =>
+            worker.postMessage({ action: "stop", data }),
+          );
+          workersStopped = true;
         }
-        if (action === "log") {
-          console.log(data);
+        if (!runningWorkersCount) {
+          const end = performance.now();
+          console.log("took", ((end - start) / 1000).toPrecision(3), "s");
+          resolve(results.sort((a, b) => a - b)[0]);
         }
       });
     }

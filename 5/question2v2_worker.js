@@ -1,5 +1,11 @@
 import { parentPort } from "worker_threads";
 
+let workerId = undefined;
+let currentLocationToCheck = undefined;
+let batchSize = 1_000_000;
+let foundLocation = undefined;
+let stoppedAtLocation = undefined;
+
 const getSeedFromLocation = (location, maps, seeds) => {
   let currentDestination = location;
   for (let i = maps.length - 1; i > -1; i--) {
@@ -25,19 +31,43 @@ const getSeedFromLocation = (location, maps, seeds) => {
   return seedExist ? currentDestination : false;
 };
 
-parentPort?.on("message", ({ i, concurrentWorkers, maps, seeds }) => {
-  for (let j = i; j < 1_000_000_000; j += concurrentWorkers) {
-    let seedExist = getSeedFromLocation(j, maps, seeds);
-    if (j % (4_000_000 * concurrentWorkers + i) === 0) {
-      parentPort?.postMessage({
-        action: "log",
-        data: `checked ${j} by ${i}`,
-      });
+function workUnit(data) {
+  const { i, concurrentWorkers, maps, seeds } = data;
+  let batchCount = batchSize;
+  while (batchCount > 0) {
+    if (currentLocationToCheck > stoppedAtLocation) {
+      console.log("early returned");
+      foundLocation = Infinity;
+      parentPort?.postMessage(foundLocation);
+      return;
+    }
+    let seedExist = getSeedFromLocation(currentLocationToCheck, maps, seeds);
+    if (currentLocationToCheck % (4_000_000 * concurrentWorkers + i) === 0) {
+      console.log(`checked ${currentLocationToCheck} by ${i}`);
     }
     if (!seedExist) {
+      currentLocationToCheck += concurrentWorkers;
+      batchCount--;
       continue;
     }
-    parentPort?.postMessage({ action: "done", data: j });
+    parentPort?.postMessage(currentLocationToCheck);
     break;
+  }
+}
+
+function work(data) {
+  workUnit(data);
+  setTimeout(() => work(data), 0);
+}
+
+parentPort?.on("message", ({ action, data }) => {
+  if (action === "start") {
+    currentLocationToCheck = data.i;
+    workerId = data.i;
+    work(data);
+  }
+  if (action === "stop") {
+    console.log("stopping", workerId, "at", data);
+    stoppedAtLocation = data;
   }
 });
