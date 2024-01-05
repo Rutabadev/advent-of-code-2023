@@ -37,10 +37,8 @@ export function computeAnswer() {
     const concurrentWorkers = cpus().length;
     const results = [];
     let runningWorkersCount = concurrentWorkers;
-    const runningWorkers = [];
     for (let i = 0; i < concurrentWorkers; i++) {
       const worker = new Worker("./5/question2v2_worker.js");
-      runningWorkers.push(worker);
       worker.postMessage({
         i,
         concurrentWorkers,
