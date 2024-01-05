@@ -1,74 +1,68 @@
 import input from "./input.js";
 import { extractMap } from "./question1.js";
+import { Worker } from "worker_threads";
+import { cpus } from "os";
 
 // compute seeds from location (starting at 0 and then up) and stop at the first seed that exist in the set of seeds.
 
 export function computeAnswer() {
-  console.time("working");
-  let lowestLocation = undefined;
-  const seeds = input
-    .match(/^seeds: (.+)$/m)?.[1]
-    .split(" ")
-    .map(Number)
-    .flatMap((num, i, mappedSeeds) =>
-      (i + 1) % 2 === 0 ? [{ from: mappedSeeds[i - 1], range: num }] : [],
-    );
+  return new Promise((resolve) => {
+    const start = performance.now();
+    const seeds = input
+      .match(/^seeds: (.+)$/m)?.[1]
+      .split(" ")
+      .map(Number)
+      .flatMap((num, i, mappedSeeds) =>
+        (i + 1) % 2 === 0 ? [{ from: mappedSeeds[i - 1], range: num }] : [],
+      );
 
-  if (!seeds) throw "could not find seeds";
-  const steps = [
-    "seed",
-    "soil",
-    "fertilizer",
-    "water",
-    "light",
-    "temperature",
-    "humidity",
-    "location",
-  ];
-  const maps = [];
-  for (let i = 0; i < steps.length - 1; i++) {
-    const map = extractMap(`${steps[i]}-to-${steps[i + 1]}`);
-    if (!map) throw "could not extract map";
-    maps.push(map);
-  }
+    if (!seeds) throw "could not find seeds";
+    const steps = [
+      "seed",
+      "soil",
+      "fertilizer",
+      "water",
+      "light",
+      "temperature",
+      "humidity",
+      "location",
+    ];
+    const maps = [];
+    for (let i = 0; i < steps.length - 1; i++) {
+      const map = extractMap(`${steps[i]}-to-${steps[i + 1]}`);
+      if (!map) throw "could not extract map";
+      maps.push(map);
+    }
 
-  const getSeedFromLocation = (location) => {
-    let currentDestination = location;
-    for (let i = maps.length - 1; i > -1; i--) {
-      const map = maps[i];
-      for (let j = 0; j < map.length; j++) {
-        const currentMap = map[j];
-        if (
-          currentMap.destinationStart <= currentDestination &&
-          currentMap.destinationStart + currentMap.range > currentDestination
-        ) {
-          currentDestination =
-            currentMap.sourceStart +
-            (currentDestination - currentMap.destinationStart);
-          break;
+    const concurrentWorkers = cpus().length;
+    const results = [];
+    let runningWorkersCount = concurrentWorkers;
+    const runningWorkers = [];
+    for (let i = 0; i < concurrentWorkers; i++) {
+      const worker = new Worker("./5/question2v2_worker.js");
+      runningWorkers.push(worker);
+      worker.postMessage({
+        i,
+        concurrentWorkers,
+        maps,
+        seeds,
+      });
+      worker.on("message", ({ action, data }) => {
+        if (action === "done") {
+          console.log("worker", i, "found", data);
+          results.push(data);
+          worker.terminate();
+          runningWorkersCount--;
+          if (!runningWorkersCount) {
+            const end = performance.now();
+            console.log("took", ((end - start) / 1000).toPrecision(3), "s");
+            resolve(results.sort((a, b) => a - b)[0]);
+          }
         }
-      }
+        if (action === "log") {
+          console.log(data);
+        }
+      });
     }
-    const seedExist = seeds.find(
-      (seedRange) =>
-        seedRange.from <= currentDestination &&
-        seedRange.range + seedRange.from > currentDestination,
-    );
-    return seedExist ? currentDestination : false;
-  };
-
-  for (let i = 0; i < Infinity; i++) {
-    const seed = getSeedFromLocation(i);
-    if (seed) {
-      lowestLocation = i;
-      break;
-    }
-    if (i % 10_000_000 === 0) {
-      console.log("checked", i);
-    }
-  }
-
-  console.log(lowestLocation);
-  console.timeEnd("working");
-  return lowestLocation;
+  });
 }

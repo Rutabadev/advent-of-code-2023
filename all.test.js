@@ -51,7 +51,7 @@ describe("day 5", () => {
   test.skip("question 2 2m47s", () => {
     expect(day5.question2()).toEqual(125_742_456);
   });
-  test.skip("question 2 v2 12.6s", () => {
-    expect(day5.question2v2()).toEqual(125_742_456);
+  test("question 2 v2 ~3s", async () => {
+    expect(await day5.question2v2()).toEqual(125_742_456);
   });
 });
