@@ -4,6 +4,7 @@ import * as day2 from "./2";
 import * as day3 from "./3";
 import * as day4 from "./4";
 import * as day5 from "./5";
+import * as day6 from "./6";
 
 describe("day 1", () => {
   test("question 1", () => {
@@ -53,5 +54,17 @@ describe("day 5", () => {
   });
   test("question 2 v2 (optimized algorithm + worker threads) ~3s", async () => {
     expect(await day5.question2v2()).toEqual(125_742_456);
+  });
+});
+
+describe("day 6", () => {
+  test("question 1", () => {
+    expect(day6.question1()).toEqual(160_816);
+  });
+  test.skip("question 2 ~7s", () => {
+    expect(day6.question2()).toEqual(46_561_107);
+  });
+  test("question 2 v2", () => {
+    expect(day6.question2v2()).toEqual(46_561_107);
   });
 });
