@@ -1,29 +1,47 @@
 import input from "./input.js";
 
+/** When there is no middle use the upper one */
+const getMiddleValue = (value1, value2) => Math.round((value1 + value2) / 2);
+
+const getDistanceTravelled = (holdTimeOrSpeed, time) => {
+  const remainingTime = time - holdTimeOrSpeed;
+  return remainingTime * holdTimeOrSpeed;
+};
+
 const determineWinningHoldTimes = (time, record) => {
-  const winningHoldTimes = [];
-  // not checking first and last values 'cause the boat doesn't move in these situations
-  // seems like the winning hold times are normally distributed,
-  // so let find only the first winning hold time, then we infer the last by symmetry and count in between
-  for (let holdTimeOrSpeed = 1; holdTimeOrSpeed < time - 1; holdTimeOrSpeed++) {
-    const remainingTime = time - holdTimeOrSpeed;
-    const distanceTravelled = remainingTime * holdTimeOrSpeed;
+  /* Not checking first and last values 'cause the boat doesn't move in these situations */
+  /* Seems like the winning hold times are normally distributed,
+     so let find only the first winning hold time, then we infer the last by symmetry and count in between */
+  /* We can find the first one faster by looking down from the middle via binary search */
+  const middleTime = Math.trunc(time / 2);
+  let firstWinningHoldTime = undefined;
+  let maxValue = middleTime;
+  let minValue = 1;
+  while (!firstWinningHoldTime) {
+    const holdTimeOrSpeed = getMiddleValue(minValue, maxValue);
+    const distanceTravelled = getDistanceTravelled(holdTimeOrSpeed, time);
+    if (minValue + 1 === maxValue) {
+      firstWinningHoldTime = maxValue;
+    }
+    if (distanceTravelled < record) {
+      minValue = holdTimeOrSpeed;
+    }
     if (distanceTravelled > record) {
-      winningHoldTimes.push(holdTimeOrSpeed);
-      winningHoldTimes.push(time - holdTimeOrSpeed);
-      break;
+      maxValue = holdTimeOrSpeed;
     }
   }
-  return winningHoldTimes;
+  return [firstWinningHoldTime, time - firstWinningHoldTime];
 };
 
 export function computeAnswer() {
   const lines = input.split("\n");
-  const time = lines[0].split(" ").filter(Number).join("");
-  const distance = lines[1].split(" ").filter(Number).join("");
+  const time = +lines[0].split(" ").filter(Number).join("");
+  const distance = +lines[1].split(" ").filter(Number).join("");
 
-  const winningHoldTimes = determineWinningHoldTimes(time, distance);
-  console.log(winningHoldTimes);
+  const [firstWinningHoldTime, lastWinningHoldTime] = determineWinningHoldTimes(
+    time,
+    distance,
+  );
 
-  return winningHoldTimes[1] - winningHoldTimes[0] + 1;
+  return lastWinningHoldTime - firstWinningHoldTime + 1;
 }
