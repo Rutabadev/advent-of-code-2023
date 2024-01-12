@@ -10,8 +10,7 @@ export function computeAnswer() {
   const numbersPositions = [];
   twoDimensionalInput.forEach((line, y) => {
     const lineString = line.join("");
-    let match;
-    while ((match = numberRegex.exec(lineString)) !== null) {
+    [...lineString.matchAll(numberRegex)].forEach((match) => {
       const [start, end] = [match.index, match.index + match[0].length];
       numbersPositions.push({
         start,
@@ -19,7 +18,7 @@ export function computeAnswer() {
         y,
         value: +match[0],
       });
-    }
+    });
   });
 
   twoDimensionalInput.forEach((line, y) => {

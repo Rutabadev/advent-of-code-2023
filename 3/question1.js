@@ -8,8 +8,7 @@ export function computeAnswer() {
 
   twoDimensionalInput.forEach((line, y) => {
     const lineString = line.join("");
-    let match;
-    while ((match = numberRegex.exec(lineString)) !== null) {
+    [...lineString.matchAll(numberRegex)].forEach((match) => {
       const [start, end] = [match.index, match.index + match[0].length];
       const [previousXIndex, nextXIndex] = [
         Math.max(start - 1, 0),
@@ -43,8 +42,10 @@ export function computeAnswer() {
       ) {
         result += +match[0];
       }
-    }
+    });
   });
   console.log(result);
   return result;
 }
+
+computeAnswer();
