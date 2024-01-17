@@ -74,4 +74,7 @@ describe("day 7", () => {
   test("question 1", () => {
     expect(day7.question1()).toEqual(248_453_531);
   });
+  test("question 2", () => {
+    expect(day7.question2()).toEqual(248_781_813);
+  });
 });
