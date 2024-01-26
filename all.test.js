@@ -7,6 +7,7 @@ import * as day5 from "./5";
 import * as day6 from "./6";
 import * as day7 from "./7";
 import * as day8 from "./8";
+import * as day9 from "./9";
 
 describe("day 1", () => {
   test("question 1", () => {
@@ -86,5 +87,14 @@ describe("day 8", () => {
   });
   test("question 2", () => {
     expect(day8.question2()).toEqual(22_103_062_509_257);
+  });
+});
+
+describe("day 9", () => {
+  test("question 1", () => {
+    expect(day9.question1()).toEqual(1_993_300_041);
+  });
+  test("question 2", () => {
+    expect(day9.question2()).toEqual(1038);
   });
 });
