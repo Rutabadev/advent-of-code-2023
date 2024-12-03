@@ -40,7 +40,7 @@ export function computeAnswer() {
     let runningWorkersCount = concurrentWorkers;
     let workersStopped = false;
     for (let i = 0; i < concurrentWorkers; i++) {
-      const worker = new Worker("./5/question2v2_worker.js");
+      const worker = new Worker("./2023/5/question2v2_worker.js");
       runningWorkers.push(worker);
       worker.postMessage({
         action: "start",
